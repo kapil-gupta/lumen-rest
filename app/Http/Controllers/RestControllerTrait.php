@@ -38,7 +38,7 @@ trait RestControllerTrait {
 			if ($v->fails ()) {
 				throw new \Exception ( "ValidationException" );
 			}
-			$data = $model->store ( $request->all () );
+			$data = $model->create( $request->all () );
 			return $this->createdResponse ( $data );
 		} catch ( \Exception $ex ) {
 			$data = [ 
@@ -56,13 +56,12 @@ trait RestControllerTrait {
 		}
 		
 		try {
-			$v = \Validator::make ( $request->all (), $model->rules (), $model->messages () );
+			$v = \Validator::make ( $request->all(),$model->rules($id),$model->messages () );
 			if ($v->fails ()) {
 				throw new \Exception ( "ValidationException" );
 			}
-			$data->fill ( $request->all () );
-			$data->save ();
-			return $this->showResponse ( $data );
+			$response = $model->update($id,$request->all());
+			return $this->showResponse ( $response );
 		} catch ( \Exception $ex ) {
 			$data = [ 
 					'form_validations' => $v->errors (),
@@ -74,9 +73,9 @@ trait RestControllerTrait {
 	public function destroy($id) {
 		$model = $this->model;
 		if (! $data = $model->find ( $id )) {
-			return $this->notFoundResponse ();
+			return $this->notFoundResponse();
 		}
-		$data->delete();
+		$model->delete($id);
 		return $this->deletedResponse ();
 	}
 	protected function createdResponse($data) {

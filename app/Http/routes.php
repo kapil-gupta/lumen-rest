@@ -25,4 +25,12 @@ $app->group(['prefix' => $api_prefix], function($app)
 			'as' => 'users.store',
 			'uses' => 'App\Http\Controllers\UserController@store'
 	]);
+	$app->put('users/{id}', [
+			'as' => 'users.update',
+			'uses' => 'App\Http\Controllers\UserController@update'
+	]);
+	$app->delete('users/{id}', [
+			'as' => 'users.delete',
+			'uses' => 'App\Http\Controllers\UserController@destroy'
+	]);
 });

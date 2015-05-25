@@ -60,9 +60,19 @@ class BaseRepository
         $model = $this->modelName;
         return new $model();
     }
-    public function store($data){
+    public function create($data){
     	$instance = $this->getNewInstance();
-    	$instance->create($data);
+    	$result = $instance->create($data);
+    	return $result;
     }
-     
+    public function update($id,$data = array()){
+    	$model	=	$this->find($id);
+    	$model->fill($data);
+    	$model->save();
+    	return $model;
+    }
+    public function delete($id){
+    	$model	=	$this->find($id);
+    	$model->delete();
+    }
 }

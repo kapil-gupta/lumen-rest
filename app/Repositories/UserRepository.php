@@ -5,11 +5,16 @@ class UserRepository extends BaseRepository implements UserInterface
 {
 
     protected $modelName = 'App\\Models\\User';
-    public function rules(){
+    public function rules($id=null){
+    	if($id){
+    		$email_rule  = ['required', 'min:5','unique:users,email,'.$id];
+    	}else{
+    		$email_rule  = ['required', 'min:5','unique:users,email'];
+    	}
         return [
                     'first_name' => ['required', 'min:5'],
                     'last_name' => ['required', 'min:5'],
-                    'email' => ['required', 'min:5','unique:users,email'],
+                    'email' => $email_rule,
                     'password' => ['required', 'min:8'],
                     'birthdate' => ['required','date','date_format:Y-m-d'],
                     'contact' => ['required'],
