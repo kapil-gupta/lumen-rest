@@ -21,7 +21,7 @@ $app->withEloquent ();
 $app->configure ( 'session' );
 $app->configure ( 'app' );
 $app->configure ( 'constants' );
-
+class_alias('Illuminate\Support\Facades\Config', 'Config');
 /*
  * |--------------------------------------------------------------------------
  * | Register Container Bindings
@@ -37,6 +37,10 @@ $app->singleton ( 'Illuminate\Contracts\Debug\ExceptionHandler', 'App\Exceptions
 
 $app->singleton ( 'Illuminate\Contracts\Console\Kernel', 'App\Console\Kernel' );
 $app->bind ( 'App\Interfaces\UserInterface', 'App\Repositories\UserRepository' );
+
+$app->register('LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider');
+$app->register('Optimus\OAuth2Server\OAuth2ServerServiceProvider');
+
 /*
  * |--------------------------------------------------------------------------
  * | Register Middleware
@@ -49,8 +53,12 @@ $app->bind ( 'App\Interfaces\UserInterface', 'App\Repositories\UserRepository' )
  */
 $app->routeMiddleware([
 		'old' => 'App\Http\Middleware\ExampleMiddleware',
+		'check-authorization-params' => 'Optimus\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware',
+		'csrf' => 'Laravel\Lumen\Http\Middleware\VerifyCsrfToken',
+		'oauth' => 'Optimus\OAuth2Server\Middleware\OAuthMiddleware',
+		'oauth-owner' => 'Optimus\OAuth2Server\Middleware\OAuthOwnerMiddleware'
 ]);
-$app->middleware ( [ ]
+$app->middleware ( ['LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware' ]
 // // 'Illuminate\Cookie\Middleware\EncryptCookies',
 // // 'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 // // 'Illuminate\Session\Middleware\StartSession',
