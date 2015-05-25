@@ -11,7 +11,7 @@ class UserController extends BaseController {
 	use RestControllerTrait;
 	protected $model;
 	public function __construct(UserModel $user) {
-		parent::__construct ();
 		$this->model = $user;
+		parent::__construct ();
 	}
 }

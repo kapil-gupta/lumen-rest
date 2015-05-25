@@ -18,11 +18,11 @@ $app->group(['prefix' => $api_prefix], function($app)
 {
 	$app->get('users', [
 			'middleware' => 'old',
-			'as' => 'users',
+			'as' => 'users.index',
 			'uses' => 'App\Http\Controllers\UserController@index'
 	]);
 	$app->post('users', [
-			'as' => 'users.create',
+			'as' => 'users.store',
 			'uses' => 'App\Http\Controllers\UserController@store'
 	]);
 });

@@ -11,7 +11,7 @@ interface BaseInterface
     
     public function rules();
     public function messages();
-         // public function store($data);
+    public function store($data);
     
     // public function update($id, $data);
     

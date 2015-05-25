@@ -9,16 +9,17 @@ trait RestControllerTrait {
 	public function index(Request $request) {
 		try {
 			$model = $this->model;
-			$params= $request->all();
-			return $this->listResponse ( $model->all ($params) );
+			$params = $request->all ();
+			return $this->listResponse ( $model->all ( $params ) );
 		} catch ( \Exception $e ) {
-			 
+			
 			$data = [ 
-					'errorMessage' => $e->getMessage () ,
-					//'errorLine' => $e->getLine(),
-					//'errorFile' => $e->getFile(),
-					//'errorTrace' => $e->getTraceAsString()
-			];
+					'errorMessage' => $e->getMessage () 
+			]
+			// 'errorLine' => $e->getLine(),
+			// 'errorFile' => $e->getFile(),
+			// 'errorTrace' => $e->getTraceAsString()
+			;
 			return $this->serverErrorResponse ( $data );
 		}
 	}
@@ -32,12 +33,12 @@ trait RestControllerTrait {
 	public function store(Request $request) {
 		$model = $this->model;
 		try {
-			$v = \Validator::make ( $request->all (), $this->validationRules );
+			$v = \Validator::make ( $request->all (), $model->rules (), $model->messages () );
 			
 			if ($v->fails ()) {
 				throw new \Exception ( "ValidationException" );
 			}
-			$data = $model::create ( \Request::all () );
+			$data = $model->store ( $request->all () );
 			return $this->createdResponse ( $data );
 		} catch ( \Exception $ex ) {
 			$data = [ 
@@ -47,20 +48,19 @@ trait RestControllerTrait {
 			return $this->clientErrorResponse ( $data );
 		}
 	}
-	public function update($id) {
+	public function update(Request $request, $id) {
 		$model = $this->model;
 		
-		if (! $data = $model::find ( $id )) {
+		if (! $data = $model->find ( $id )) {
 			return $this->notFoundResponse ();
 		}
 		
 		try {
-			$v = \Validator::make ( \Request::all (), $this->validationRules );
-			
+			$v = \Validator::make ( $request->all (), $model->rules (), $model->messages () );
 			if ($v->fails ()) {
 				throw new \Exception ( "ValidationException" );
 			}
-			$data->fill ( \Request::all () );
+			$data->fill ( $request->all () );
 			$data->save ();
 			return $this->showResponse ( $data );
 		} catch ( \Exception $ex ) {
@@ -73,10 +73,10 @@ trait RestControllerTrait {
 	}
 	public function destroy($id) {
 		$model = $this->model;
-		if (! $data = $model::find ( $id )) {
+		if (! $data = $model->find ( $id )) {
 			return $this->notFoundResponse ();
 		}
-		$data->delete ();
+		$data->delete();
 		return $this->deletedResponse ();
 	}
 	protected function createdResponse($data) {
@@ -102,7 +102,9 @@ trait RestControllerTrait {
 				'status' => true,
 				'data' => $data 
 		];
-		return $this->sendResponse ( $response,['X-Total-Count'=>$data['total']] );
+		return $this->sendResponse ( $response, [ 
+				'X-Total-Count' => $data ['total'] 
+		] );
 	}
 	protected function notFoundResponse() {
 		$response = [ 
@@ -141,9 +143,9 @@ trait RestControllerTrait {
 		return $this->sendResponse ( $response );
 	}
 	protected function sendResponse($response, $addtional_headers = []) {
-		$res = new JsonResponse ( $response, $response ['code'],array_merge([ 
+		$res = new JsonResponse ( $response, $response ['code'], array_merge ( [ 
 				'Content-Type' => 'application/json' 
-		],$addtional_headers) , 1 );
+		], $addtional_headers ), 1 );
 		$res->setJsonOptions ( JSON_PRETTY_PRINT );
 		return $res;
 	}

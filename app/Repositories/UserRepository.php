@@ -9,11 +9,11 @@ class UserRepository extends BaseRepository implements UserInterface
         return [
                     'first_name' => ['required', 'min:5'],
                     'last_name' => ['required', 'min:5'],
-                    'email' => ['required', 'min:5','unique'],
-                    'password' => ['required', 'min:5'],
-                    'birthdate' => ['required', 'min:5'],
-                    'contact' => ['required', 'min:5'],
-                    'biography' => ['required', 'min:5'],
+                    'email' => ['required', 'min:5','unique:users,email'],
+                    'password' => ['required', 'min:8'],
+                    'birthdate' => ['required','date','date_format:Y-m-d'],
+                    'contact' => ['required'],
+                    //'biography' => ['required', 'min:5'],
                     'address1' => ['required', 'min:5'],
                     'address2' => ['required', 'min:5']
 

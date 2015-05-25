@@ -52,13 +52,17 @@ class BaseRepository
     public function find($id, $relations = [])
     {
         $instance = $this->getNewInstance();
-        return $instance->with($relations)->find($id);
+        return $instance->find($id);
     }
 
     protected function getNewInstance()
     {
         $model = $this->modelName;
         return new $model();
+    }
+    public function store($data){
+    	$instance = $this->getNewInstance();
+    	$instance->create($data);
     }
      
 }
