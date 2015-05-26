@@ -32,4 +32,8 @@ class UserRepository extends BaseRepository implements UserInterface
             'address2.min' =>'Address 2should be greater then 5 characters',
         ];
     }
+    public function create($data){
+    	$data['password'] =\Hash::make($data['password'] );
+    	return parent::create($data);
+    }
 }

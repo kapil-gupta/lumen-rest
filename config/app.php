@@ -12,8 +12,8 @@ return [
     | will not be safe. Please do this before deploying an application!
     |
     */
-
-    'key' => env('APP_KEY', 'Dr56zpmMXH4EQmgyCDKSRns7K46Iv6uL'),
+	'url' => 'http://lumenrest.local',
+    'key' => env('APP_KEY', 'U<CdJu~T&.g/kR-NX55h]HfB+bb,b7Y*'),
 
     'cipher' => MCRYPT_RIJNDAEL_128,
 

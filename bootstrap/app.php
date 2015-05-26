@@ -15,13 +15,18 @@ Dotenv::load ( __DIR__ . '/../' );
  */
 
 $app = new Laravel\Lumen\Application ( realpath ( __DIR__ . '/../' ) );
+class_alias('Illuminate\Support\Facades\Config', 'Config');
+
 
 $app->withFacades ();
 $app->withEloquent ();
-$app->configure ( 'session' );
+
 $app->configure ( 'app' );
+$app->configure ( 'session' );
 $app->configure ( 'constants' );
-class_alias('Illuminate\Support\Facades\Config', 'Config');
+$app->configure('secrets');
+$app->configure('auth');
+
 /*
  * |--------------------------------------------------------------------------
  * | Register Container Bindings
@@ -52,15 +57,14 @@ $app->register('Optimus\OAuth2Server\OAuth2ServerServiceProvider');
  * |
  */
 $app->routeMiddleware([
-		'old' => 'App\Http\Middleware\ExampleMiddleware',
 		'check-authorization-params' => 'Optimus\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware',
 		'csrf' => 'Laravel\Lumen\Http\Middleware\VerifyCsrfToken',
 		'oauth' => 'Optimus\OAuth2Server\Middleware\OAuthMiddleware',
 		'oauth-owner' => 'Optimus\OAuth2Server\Middleware\OAuthOwnerMiddleware'
 ]);
-$app->middleware ( ['LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware' ]
+$app->middleware ( ['LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware',
 // // 'Illuminate\Cookie\Middleware\EncryptCookies',
-// // 'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
+'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse']
 // // 'Illuminate\Session\Middleware\StartSession',
 // // 'Illuminate\View\Middleware\ShareErrorsFromSession',
 // // 'Laravel\Lumen\Http\Middleware\VerifyCsrfToken',

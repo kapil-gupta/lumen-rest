@@ -75,7 +75,8 @@ trait RestControllerTrait {
 		if (! $data = $model->find ( $id )) {
 			return $this->notFoundResponse();
 		}
-		$model->delete($id);
+		$data->restore();
+		//$model->delete($id);
 		return $this->deletedResponse ();
 	}
 	protected function createdResponse($data) {
